@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NyayaSetu — Legal QA</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { overflow: hidden; }
+.qa-shell {
+  display: flex; flex-direction: column;
+  height: calc(100vh - var(--topbar-h));
+  margin-left: var(--sidebar-w); margin-top: var(--topbar-h);
+}
+.qa-header {
+  border-bottom: 1px solid var(--border); padding: 18px 40px;
+  background: var(--surface); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.qa-header-title { font-family: var(--font-serif); font-size: 20px; font-weight: 400; }
+.qa-header-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.qa-header-right { display: flex; align-items: center; gap: 8px; }
+.confidence-legend { display: flex; gap: 12px; align-items: center; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+.qa-messages { flex: 1; overflow-y: auto; padding: 24px 40px; background: var(--bg); }
+
+.empty-state { max-width: 540px; margin: 32px auto 0; }
+.empty-state-title { font-family: var(--font-serif); font-size: 22px; font-weight: 400; color: var(--text-primary); margin-bottom: 6px; }
+.empty-state-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 28px; line-height: 1.6; }
+.example-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.example-chip {
+  padding: 8px 14px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-md); font-size: 12.5px; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.15s;
+}
+.example-chip:hover { border-color: var(--border-strong); color: var(--text-primary); }
+
+.msg-row { display: flex; margin-bottom: 20px; }
+.msg-row.user { justify-content: flex-end; }
+.msg-row.ai { justify-content: flex-start; align-items: flex-start; gap: 10px; }
+
+.ai-avatar {
+  width: 28px; height: 28px; background: var(--text-primary); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+}
+.ai-avatar svg { width: 14px; height: 14px; }
+
+.msg-bubble {
+  max-width: 600px; padding: 12px 16px; border-radius: var(--radius-lg);
+  font-size: 13.5px; line-height: 1.7;
+}
+.msg-bubble.user {
+  background: var(--text-primary); color: white;
+  border-radius: 14px 14px 4px 14px;
+}
+.msg-bubble.ai {
+  background: var(--surface); border: 1px solid var(--border); color: var(--text-primary);
+  border-radius: 4px 14px 14px 14px;
+}
+
+.ai-meta { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; margin-left: 38px; }
+.confidence-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; padding: 4px 10px; border-radius: 100px; font-weight: 500;
+}
+.conf-high { background: #E8F5ED; color: #1A6B3C; }
+.conf-medium { background: #FBF3E2; color: #8B6914; }
+.conf-low { background: var(--surface-2); color: var(--text-secondary); }
+
+.followup-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.followup-chip {
+  padding: 5px 12px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 100px; font-size: 12px; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.15s;
+}
+.followup-chip:hover { border-color: var(--text-primary); color: var(--text-primary); }
+
+/* CHAT INPUT */
+.qa-input-wrap {
+  border-top: 1px solid var(--border); padding: 16px 40px;
+  background: var(--surface); flex-shrink: 0;
+}
+.qa-input-inner {
+  max-width: 680px; margin: 0 auto;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 4px 6px 4px 14px;
+}
+.qa-input-inner:focus-within { border-color: var(--border-strong); }
+.qa-text-input {
+  flex: 1; background: none; border: none; outline: none;
+  font-family: var(--font-sans); font-size: 13.5px; color: var(--text-primary);
+  padding: 8px 0;
+}
+.qa-text-input::placeholder { color: var(--text-tertiary); }
+.qa-icon-btn {
+  width: 32px; height: 32px; border: 1px solid var(--border); background: var(--surface);
+  border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+}
+.qa-icon-btn:hover { background: var(--surface-3); }
+.qa-send {
+  width: 36px; height: 36px; background: var(--text-primary); border: none;
+  border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+}
+.qa-send:hover { background: #2d2c29; }
+.qa-hint { text-align: center; font-size: 11px; color: var(--text-tertiary); margin-top: 8px; max-width: 680px; margin-left: auto; margin-right: auto; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-mark">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h7M3 12h9" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="sidebar-logo-text">NyayaSetu</div>
+      <div class="sidebar-logo-sub">Legal Intelligence</div>
+    </div>
+  </div>
+  <button class="new-btn" onclick="window.location='analysis.html'">
+    <svg class="new-btn-icon" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    New Analysis
+  </button>
+  <div class="sidebar-section-label">Workspace</div>
+  <a href="dashboard.html" class="nav-item">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    Dashboard
+  </a>
+  <a href="analysis.html" class="nav-item">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h8l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M11 2v3h3M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Case Analysis
+  </a>
+  <a href="qa.html" class="nav-item active">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><path d="M14 10a1 1 0 01-1 1H5l-3 3V3a1 1 0 011-1h10a1 1 0 011 1v7z" stroke="currentColor" stroke-width="1.3"/></svg>
+    Legal QA
+  </a>
+  <a href="search.html" class="nav-item">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Similar Cases
+  </a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-settings">
+    <div class="sidebar-section-label">Settings</div>
+    <div class="setting-row">
+      <div class="setting-label">HF API Key</div>
+      <input type="password" class="setting-input" value="hf_xxxxxxxxxxxxxx">
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">Readability</div>
+      <select class="setting-input"><option>Basic</option><option selected>Student</option><option>Advanced</option></select>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">Language</div>
+      <select class="setting-input"><option selected>English</option><option>Hindi</option><option>Telugu</option></select>
+    </div>
+    <div class="setting-row">
+      <label class="setting-checkbox"><input type="checkbox" checked><span>InLegalBERT Roles</span></label>
+    </div>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-search">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#9E9B96" stroke-width="1.4"/><path d="M10.5 10.5l3 3" stroke="#9E9B96" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <input type="text" placeholder="Search articles, videos, documents…">
+  </div>
+  <div class="topbar-right">
+    <button class="topbar-icon-btn">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2a4.5 4.5 0 014.5 4.5c0 2.5.5 3.5 1.5 4.5H2c1-1 1.5-2 1.5-4.5A4.5 4.5 0 018 2zM6.5 13a1.5 1.5 0 003 0" stroke="#6B6860" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </button>
+    <div class="avatar">JD</div>
+  </div>
+</header>
+
+<!-- QA SHELL -->
+<div class="qa-shell">
+  <div class="qa-header">
+    <div>
+      <div class="qa-header-title">Legal QA</div>
+      <div class="qa-header-subtitle">Ask questions about Indian law — IPC, BNS, constitutional provisions and more</div>
+    </div>
+    <div class="confidence-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#1A6B3C"></div>High confidence</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#8B6914"></div>Medium</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#9E9B96"></div>Low</div>
+    </div>
+  </div>
+
+  <div class="qa-messages" id="messages">
+    <!-- Empty state -->
+    <div id="empty-state" class="empty-state">
+      <div class="empty-state-title">What would you like to know?</div>
+      <div class="empty-state-sub">Ask any question about Indian criminal law, constitutional provisions, or legal procedures. I'll answer with cited references.</div>
+      <div class="example-chips">
+        <div class="example-chip" onclick="sendExample(this)">What is the punishment for murder under BNS?</div>
+        <div class="example-chip" onclick="sendExample(this)">Difference between murder and culpable homicide?</div>
+        <div class="example-chip" onclick="sendExample(this)">What does criminal conspiracy mean?</div>
+        <div class="example-chip" onclick="sendExample(this)">What are the ingredients of theft?</div>
+        <div class="example-chip" onclick="sendExample(this)">Explain the right to silence in India</div>
+        <div class="example-chip" onclick="sendExample(this)">What is anticipatory bail?</div>
+      </div>
+    </div>
+    <!-- Messages injected here -->
+  </div>
+
+  <div class="qa-input-wrap">
+    <div class="qa-input-inner">
+      <input type="text" class="qa-text-input" id="qa-input" placeholder="Ask your legal question here…" onkeydown="handleKey(event)">
+      <button class="qa-icon-btn">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2.5V10M5 5.5L8 2.5l3 3" stroke="#9E9B96" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13.5h10" stroke="#9E9B96" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+      <button class="qa-send" onclick="sendMessage()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M8 4l5 4-5 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="qa-hint">Responses are AI-generated and for educational purposes only. Always consult a qualified lawyer.</div>
+  </div>
+</div>
+
+<script>
+const sampleAnswer = {
+  text: "Culpable homicide is the genus, and murder is the species. Under the Bharatiya Nyaya Sanhita (BNS) 2023, Section 100 defines culpable homicide as the act of causing death with the intention of causing death, or with the intention of causing such bodily injury as is likely to cause death.\n\nMurder, defined under Section 101 BNS, is culpable homicide with certain aggravating circumstances — primarily, where the act is done with the intention of causing death, or with knowledge that the act is imminently dangerous and will in all probability cause death.\n\nThe key distinction lies in the degree of intention and knowledge. Culpable homicide not amounting to murder may attract a lesser punishment (up to life imprisonment), while murder is punishable with death or imprisonment for life.",
+  confidence: "High",
+  followups: ["What is Section 101 BNS in full?", "Define IPC 299 vs IPC 300?", "What are exceptions to murder?"]
+};
+
+function sendExample(el) {
+  const text = el.textContent;
+  addMessage(text);
+}
+
+function handleKey(e) { if (e.key === 'Enter') sendMessage(); }
+
+function sendMessage() {
+  const input = document.getElementById('qa-input');
+  const val = input.value.trim();
+  if (!val) return;
+  input.value = '';
+  addMessage(val);
+}
+
+function addMessage(text) {
+  document.getElementById('empty-state').style.display = 'none';
+  const wrap = document.getElementById('messages');
+
+  // User message
+  const userRow = document.createElement('div');
+  userRow.className = 'msg-row user fade-up';
+  userRow.innerHTML = `<div class="msg-bubble user">${text}</div>`;
+  wrap.appendChild(userRow);
+
+  // Typing indicator
+  const typingRow = document.createElement('div');
+  typingRow.className = 'msg-row ai';
+  typingRow.id = 'typing';
+  typingRow.innerHTML = `
+    <div class="ai-avatar"><svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h7M3 12h9" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="msg-bubble ai" style="color:var(--text-tertiary); font-style:italic;">Searching legal corpus…</div>`;
+  wrap.appendChild(typingRow);
+  wrap.scrollTop = wrap.scrollHeight;
+
+  setTimeout(() => {
+    typingRow.remove();
+    const aiRow = document.createElement('div');
+    aiRow.className = 'msg-row ai fade-up';
+    aiRow.innerHTML = `
+      <div class="ai-avatar"><svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h7M3 12h9" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="msg-bubble ai">${sampleAnswer.text.replace(/\n\n/g, '<br><br>')}</div>`;
+    wrap.appendChild(aiRow);
+
+    const meta = document.createElement('div');
+    meta.className = 'ai-meta fade-up';
+    meta.innerHTML = `
+      <div><span class="confidence-badge conf-high">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#1A6B3C" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8 4" stroke="#1A6B3C" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Confidence: ${sampleAnswer.confidence}
+      </span></div>
+      <div class="followup-chips">
+        ${sampleAnswer.followups.map(f => `<div class="followup-chip" onclick="document.getElementById('qa-input').value='${f}'; sendMessage();">${f}</div>`).join('')}
+      </div>`;
+    wrap.appendChild(meta);
+    wrap.scrollTop = wrap.scrollHeight;
+  }, 1200);
+}
+</script>
+</body>
+</html>

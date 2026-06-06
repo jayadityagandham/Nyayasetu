@@ -1,0 +1,11 @@
+streamlit>=1.32.0
+requests
+pandas
+numpy
+faiss-cpu
+rank_bm25
+pdfplumber
+gTTS
+deep-translator
+rouge-score
+textstat

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NyayaSetu — Case Analysis</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { overflow: hidden; }
+.analysis-shell {
+  display: flex; height: calc(100vh - var(--topbar-h));
+  margin-left: var(--sidebar-w); margin-top: var(--topbar-h);
+}
+
+/* LEFT PANEL */
+.left-panel {
+  width: 220px; flex-shrink: 0; border-right: 1px solid var(--border);
+  background: var(--surface); overflow-y: auto; padding: 16px;
+}
+.filter-section { margin-bottom: 20px; }
+.filter-heading { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 10px; }
+.pill-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.role-pill { padding: 5px 10px; border-radius: 100px; font-size: 11.5px; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); transition: all 0.15s; }
+.role-pill:hover { border-color: var(--border-strong); }
+.role-pill.facts { background: #FBF3E2; border-color: #E8C96E; color: #8B6914; }
+.role-pill.issue { background: #E8EEF8; border-color: #93B3E8; color: #1D4E8F; }
+.role-pill.arg { background: #FBEBEB; border-color: #E8A3A3; color: #8B1A1A; }
+.role-pill.dec { background: #E8F5ED; border-color: #7DCFA0; color: #1A6B3C; }
+.entity-pill { font-size: 11px; padding: 4px 9px; border-radius: 4px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer; }
+.entity-pill.active { background: var(--text-primary); color: white; border-color: transparent; }
+
+/* MIDDLE PANEL */
+.mid-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.mid-tabs { padding: 0 24px; border-bottom: 1px solid var(--border); flex-shrink: 0; display: flex; }
+.mid-tab { padding: 13px 16px; font-size: 13px; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; white-space: nowrap; }
+.mid-tab:hover { color: var(--text-primary); }
+.mid-tab.active { color: var(--text-primary); border-bottom-color: var(--text-primary); font-weight: 500; }
+.mid-content { flex: 1; overflow-y: auto; padding: 24px; }
+
+.upload-zone {
+  border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg);
+  padding: 48px 32px; text-align: center; cursor: pointer;
+  transition: all 0.2s; background: var(--surface-2);
+}
+.upload-zone:hover, .upload-zone.drag { border-color: var(--text-primary); background: var(--surface); }
+.upload-icon-wrap {
+  width: 56px; height: 56px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+}
+.upload-title { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+.upload-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+.upload-formats { display: flex; gap: 6px; justify-content: center; }
+.upload-fmt { font-size: 11px; padding: 3px 10px; border-radius: 100px; background: var(--surface); border: 1px solid var(--border); color: var(--text-tertiary); font-weight: 500; }
+.upload-input { display: none; }
+
+.parties-bar {
+  display: flex; align-items: stretch; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px;
+  background: var(--surface);
+}
+.party-side { flex: 1; padding: 14px 18px; }
+.party-side:first-child { border-right: 1px solid var(--border); }
+.party-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 4px; }
+.party-name { font-family: var(--font-serif); font-size: 16px; font-weight: 400; }
+
+.role-card {
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: 16px 18px; margin-bottom: 12px; background: var(--surface);
+  border-left: 3px solid transparent;
+}
+.role-card.facts { border-left-color: #C4943A; }
+.role-card.issue { border-left-color: #1D4E8F; }
+.role-card.ratio { border-left-color: #8B1A1A; }
+.role-card.decision { border-left-color: #1A6B3C; }
+.role-card-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.role-card.facts .role-card-label { color: #8B6914; }
+.role-card.issue .role-card-label { color: #1D4E8F; }
+.role-card.ratio .role-card-label { color: #8B1A1A; }
+.role-card.decision .role-card-label { color: #1A6B3C; }
+.role-card-text { font-size: 13.5px; color: var(--text-secondary); line-height: 1.7; }
+
+/* CHAT FOOTER */
+.chat-footer {
+  flex-shrink: 0; border-top: 1px solid var(--border);
+  padding: 14px 24px; background: var(--surface);
+  display: flex; align-items: center; gap: 10px;
+}
+.chat-input {
+  flex: 1; background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 10px 14px;
+  font-family: var(--font-sans); font-size: 13.5px; outline: none;
+  color: var(--text-primary);
+}
+.chat-input:focus { border-color: var(--border-strong); }
+.chat-icon-btn {
+  width: 34px; height: 34px; border: 1px solid var(--border);
+  background: var(--surface-2); border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.chat-icon-btn:hover { background: var(--surface-3); }
+.chat-send {
+  width: 36px; height: 36px; background: var(--text-primary); border: none;
+  border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.chat-send:hover { background: #2d2c29; }
+
+/* RIGHT PANEL */
+.right-panel {
+  width: 280px; flex-shrink: 0; border-left: 1px solid var(--border);
+  background: var(--surface); display: flex; flex-direction: column; overflow: hidden;
+}
+.right-tabs { border-bottom: 1px solid var(--border); display: flex; flex-shrink: 0; }
+.right-tab { flex: 1; text-align: center; padding: 12px 4px; font-size: 12px; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+.right-tab.active { color: var(--text-primary); border-bottom-color: var(--text-primary); font-weight: 500; }
+.right-search {
+  padding: 12px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+  display: flex; align-items: center; gap: 6px; background: var(--surface-2);
+}
+.right-search input { flex: 1; background: none; border: none; outline: none; font-family: var(--font-sans); font-size: 12.5px; color: var(--text-primary); }
+.right-content { flex: 1; overflow-y: auto; padding: 14px; }
+
+.timeline-item { display: flex; gap: 12px; margin-bottom: 16px; }
+.timeline-dot-wrap { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.timeline-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; margin-top: 4px; }
+.timeline-dot.major { background: var(--text-primary); }
+.timeline-line { width: 1px; flex: 1; background: var(--border); min-height: 20px; margin-top: 4px; }
+.timeline-body { flex: 1; padding-bottom: 6px; }
+.timeline-date { font-size: 11px; color: var(--text-tertiary); margin-bottom: 3px; font-weight: 500; }
+.timeline-event { font-size: 12.5px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; line-height: 1.4; }
+.timeline-snippet { font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-mark">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h7M3 12h9" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="sidebar-logo-text">NyayaSetu</div>
+      <div class="sidebar-logo-sub">Legal Intelligence</div>
+    </div>
+  </div>
+  <button class="new-btn">
+    <svg class="new-btn-icon" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    New Analysis
+  </button>
+  <div class="sidebar-section-label">Workspace</div>
+  <a href="dashboard.html" class="nav-item">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    Dashboard
+  </a>
+  <a href="analysis.html" class="nav-item active">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h8l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M11 2v3h3M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Case Analysis
+  </a>
+  <a href="qa.html" class="nav-item">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><path d="M14 10a1 1 0 01-1 1H5l-3 3V3a1 1 0 011-1h10a1 1 0 011 1v7z" stroke="currentColor" stroke-width="1.3"/></svg>
+    Legal QA
+  </a>
+  <a href="search.html" class="nav-item">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Similar Cases
+  </a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-settings">
+    <div class="sidebar-section-label">Settings</div>
+    <div class="setting-row">
+      <div class="setting-label">HF API Key</div>
+      <input type="password" class="setting-input" value="hf_xxxxxxxxxxxxxx">
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">Readability</div>
+      <select class="setting-input"><option>Basic</option><option selected>Student</option><option>Advanced</option></select>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">Language</div>
+      <select class="setting-input"><option selected>English</option><option>Hindi</option><option>Telugu</option></select>
+    </div>
+    <div class="setting-row">
+      <label class="setting-checkbox"><input type="checkbox" checked><span>InLegalBERT Roles</span></label>
+    </div>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-search">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#9E9B96" stroke-width="1.4"/><path d="M10.5 10.5l3 3" stroke="#9E9B96" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <input type="text" placeholder="Search articles, videos, documents…">
+  </div>
+  <div class="topbar-right">
+    <button class="topbar-icon-btn">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2a4.5 4.5 0 014.5 4.5c0 2.5.5 3.5 1.5 4.5H2c1-1 1.5-2 1.5-4.5A4.5 4.5 0 018 2zM6.5 13a1.5 1.5 0 003 0" stroke="#6B6860" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </button>
+    <div class="avatar">JD</div>
+  </div>
+</header>
+
+<!-- ANALYSIS SHELL -->
+<div class="analysis-shell">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="filter-section">
+      <div class="filter-heading">Rhetorical Roles</div>
+      <div class="pill-group">
+        <div class="role-pill facts active" onclick="togglePill(this)">Facts</div>
+        <div class="role-pill issue active" onclick="togglePill(this)">Issue</div>
+        <div class="role-pill arg active" onclick="togglePill(this)">Argument</div>
+        <div class="role-pill dec active" onclick="togglePill(this)">Decision</div>
+      </div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-heading">Entity Types</div>
+      <div class="pill-group">
+        <div class="entity-pill active" onclick="this.classList.toggle('active')">LEGAL_TERM</div>
+        <div class="entity-pill active" onclick="this.classList.toggle('active')">PERSON</div>
+        <div class="entity-pill active" onclick="this.classList.toggle('active')">ORG</div>
+        <div class="entity-pill active" onclick="this.classList.toggle('active')">GPE</div>
+        <div class="entity-pill" onclick="this.classList.toggle('active')">DATE</div>
+        <div class="entity-pill" onclick="this.classList.toggle('active')">STATUTE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MIDDLE PANEL -->
+  <div class="mid-panel">
+    <div class="mid-tabs">
+      <div class="mid-tab active" onclick="switchMidTab(this, 'summary')">Structured Summary</div>
+      <div class="mid-tab" onclick="switchMidTab(this, 'sections')">Legal Sections</div>
+      <div class="mid-tab" onclick="switchMidTab(this, 'timeline')">Timeline</div>
+      <div class="mid-tab" onclick="switchMidTab(this, 'keywords')">Keywords</div>
+    </div>
+    <div class="mid-content">
+
+      <!-- UPLOAD VIEW -->
+      <div id="view-upload">
+        <div class="upload-zone" id="dropzone" onclick="document.getElementById('fileInput').click()"
+          ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+          <div class="upload-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4v12M7 9l5-5 5 5" stroke="#6B6860" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 18h16" stroke="#6B6860" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="upload-title">Drop your legal document here</div>
+          <div class="upload-sub">Drag &amp; drop or click to browse</div>
+          <div class="upload-formats">
+            <span class="upload-fmt">PDF</span>
+            <span class="upload-fmt">TXT</span>
+            <span class="upload-fmt">DOCX</span>
+          </div>
+        </div>
+        <input type="file" id="fileInput" class="upload-input" accept=".pdf,.txt,.docx" onchange="handleFileSelect(this)">
+      </div>
+
+      <!-- ANALYSIS VIEW (hidden initially) -->
+      <div id="view-analysis" style="display:none;">
+        <div class="parties-bar">
+          <div class="party-side">
+            <div class="party-label">Petitioner</div>
+            <div class="party-name">Maneka Gandhi</div>
+          </div>
+          <div class="party-side">
+            <div class="party-label">Respondent</div>
+            <div class="party-name">Union of India</div>
+          </div>
+        </div>
+
+        <div class="role-card facts">
+          <div class="role-card-label">Facts</div>
+          <div class="role-card-text">The petitioner's passport was impounded by the Regional Passport Authority under the Passport Act, 1967, without assigning any reasons therefor. The petitioner challenged the impoundment on the ground that it violated her fundamental right to personal liberty under Article 21.</div>
+        </div>
+        <div class="role-card issue">
+          <div class="role-card-label">Issue</div>
+          <div class="role-card-text">Whether the right to travel abroad is a part of the right to personal liberty under Article 21, and whether the procedure prescribed by law must satisfy requirements of fairness and reasonableness as required by Articles 14 and 19.</div>
+        </div>
+        <div class="role-card ratio">
+          <div class="role-card-label">Ratio</div>
+          <div class="role-card-text">The Supreme Court held that "procedure established by law" in Article 21 must be just, fair and reasonable. No person can be deprived of life or personal liberty except in accordance with a procedure that is reasonable, fair and just. Articles 14, 19 and 21 are not mutually exclusive.</div>
+        </div>
+        <div class="role-card decision">
+          <div class="role-card-label">Decision</div>
+          <div class="role-card-text">The Court ruled in favour of the petitioner, holding that the impoundment of the passport without any opportunity of being heard was violative of the principles of natural justice and therefore unconstitutional. The order was set aside.</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="chat-footer">
+      <input class="chat-input" type="text" placeholder="Ask a question about this document…">
+      <button class="chat-icon-btn">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 5.5-12 5.5V9l8-1-8-1V2z" fill="#9E9B96"/></svg>
+      </button>
+      <button class="chat-send">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M8 4l5 4-5 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="right-tabs">
+      <div class="right-tab active" onclick="switchRightTab(this)">Timeline</div>
+      <div class="right-tab" onclick="switchRightTab(this)">Original</div>
+      <div class="right-tab" onclick="switchRightTab(this)">Keywords</div>
+    </div>
+    <div class="right-search">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#9E9B96" stroke-width="1.4"/><path d="M10.5 10.5l3 3" stroke="#9E9B96" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <input type="text" placeholder="Search events…">
+    </div>
+    <div class="right-content">
+      <div class="timeline-item">
+        <div class="timeline-dot-wrap">
+          <div class="timeline-dot major"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-body">
+          <div class="timeline-date">1 July 1976</div>
+          <div class="timeline-event">Passport Impounded</div>
+          <div class="timeline-snippet">Regional Passport Office impounds passport without reason.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot-wrap">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-body">
+          <div class="timeline-date">10 July 1976</div>
+          <div class="timeline-event">Writ Petition Filed</div>
+          <div class="timeline-snippet">Petitioner approaches Supreme Court under Article 32.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot-wrap">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-body">
+          <div class="timeline-date">24 Jan 1978</div>
+          <div class="timeline-event">Judgment Pronounced</div>
+          <div class="timeline-snippet">7-judge bench delivers landmark ruling expanding Art. 21.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot-wrap">
+          <div class="timeline-dot major"></div>
+        </div>
+        <div class="timeline-body">
+          <div class="timeline-date">1978 onwards</div>
+          <div class="timeline-event">Constitutional Legacy</div>
+          <div class="timeline-snippet">Judgment becomes basis for the Golden Triangle doctrine.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function togglePill(el) { el.classList.toggle('active'); }
+
+function switchMidTab(tab, view) {
+  document.querySelectorAll('.mid-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+}
+
+function switchRightTab(tab) {
+  document.querySelectorAll('.right-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+}
+
+function handleDragOver(e) { e.preventDefault(); document.getElementById('dropzone').classList.add('drag'); }
+function handleDragLeave(e) { document.getElementById('dropzone').classList.remove('drag'); }
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropzone').classList.remove('drag');
+  showAnalysis();
+}
+function handleFileSelect(input) { if (input.files.length) showAnalysis(); }
+
+function showAnalysis() {
+  document.getElementById('view-upload').style.display = 'none';
+  document.getElementById('view-analysis').style.display = 'block';
+}
+</script>
+</body>
+</html>

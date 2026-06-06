@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+data/
+*.faiss
+*.pkl
+*.npy
+.env
+node_modules/
+.next/
+package-lock.json
+web_structure.md.resolved

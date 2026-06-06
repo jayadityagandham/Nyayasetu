@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NyayaSetu — Similar Cases</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+body { overflow: hidden; }
+.search-shell {
+  display: flex; height: calc(100vh - var(--topbar-h));
+  margin-left: var(--sidebar-w); margin-top: var(--topbar-h);
+}
+
+/* LEFT FILTER PANEL */
+.filter-panel {
+  width: 220px; flex-shrink: 0; border-right: 1px solid var(--border);
+  background: var(--surface); overflow-y: auto; padding: 20px 16px;
+}
+.filter-panel-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 18px; }
+.filter-group { margin-bottom: 22px; }
+.filter-group-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 10px; }
+.radio-option { display: flex; align-items: center; gap: 8px; padding: 5px 0; cursor: pointer; }
+.radio-option input[type=radio] { accent-color: var(--text-primary); }
+.radio-option label { font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+.radio-option input:checked + label { color: var(--text-primary); font-weight: 500; }
+
+.slider-wrap { padding: 4px 0; }
+.slider-value { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px; }
+input[type=range] {
+  width: 100%; accent-color: var(--text-primary); cursor: pointer;
+  height: 4px;
+}
+.slider-minmax { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-tertiary); margin-top: 4px; }
+
+/* MAIN PANEL */
+.main-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+
+.search-bar-wrap { padding: 20px 24px; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.search-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 4px 6px 4px 14px;
+}
+.search-bar:focus-within { border-color: var(--border-strong); background: var(--surface); }
+.search-bar-input {
+  flex: 1; background: none; border: none; outline: none;
+  font-family: var(--font-sans); font-size: 13.5px; color: var(--text-primary);
+  padding: 10px 0;
+}
+.search-bar-input::placeholder { color: var(--text-tertiary); }
+.search-btn {
+  padding: 9px 18px; background: var(--text-primary); color: white;
+  border: none; border-radius: var(--radius-md); font-family: var(--font-sans);
+  font-size: 13px; font-weight: 500; cursor: pointer; flex-shrink: 0;
+}
+.search-btn:hover { background: #2d2c29; }
+
+.results-area { flex: 1; overflow-y: auto; padding: 20px 24px; }
+
+.empty-state-search { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }
+.empty-icon { width: 56px; height: 56px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+.empty-title { font-size: 15px; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; }
+.empty-sub { font-size: 13px; color: var(--text-secondary); }
+.results-meta { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+.results-meta strong { color: var(--text-primary); }
+
+.result-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px 20px;
+  margin-bottom: 12px; transition: all 0.15s; cursor: pointer;
+}
+.result-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.result-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.result-card-title { font-size: 14.5px; font-weight: 500; color: var(--text-primary); line-height: 1.4; flex: 1; }
+.result-outcome { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.outcome-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.outcome-icon.accept { background: #E8F5ED; }
+.outcome-icon.reject { background: #FBEBEB; }
+.result-meta { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; flex-wrap: wrap; }
+.result-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); }
+.score-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px; background: var(--surface-2); color: var(--text-secondary); border: 1px solid var(--border); }
+.result-preview { font-size: 13px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 12px; }
+.result-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.result-tag { font-size: 11px; padding: 3px 9px; border-radius: 4px; background: var(--surface-2); color: var(--text-secondary); border: 1px solid var(--border); }
+.result-findings { background: var(--surface-2); border-radius: var(--radius-sm); padding: 10px 12px; border-left: 2px solid var(--border-strong); }
+.result-findings-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 4px; }
+.result-findings-text { font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; font-style: italic; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-mark">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h7M3 12h9" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="sidebar-logo-text">NyayaSetu</div>
+      <div class="sidebar-logo-sub">Legal Intelligence</div>
+    </div>
+  </div>
+  <button class="new-btn" onclick="window.location='analysis.html'">
+    <svg class="new-btn-icon" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    New Analysis
+  </button>
+  <div class="sidebar-section-label">Workspace</div>
+  <a href="dashboard.html" class="nav-item">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    Dashboard
+  </a>
+  <a href="analysis.html" class="nav-item">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><path d="M3 2h8l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3"/><path d="M11 2v3h3M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Case Analysis
+  </a>
+  <a href="qa.html" class="nav-item">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><path d="M14 10a1 1 0 01-1 1H5l-3 3V3a1 1 0 011-1h10a1 1 0 011 1v7z" stroke="currentColor" stroke-width="1.3"/></svg>
+    Legal QA
+  </a>
+  <a href="search.html" class="nav-item active">
+    <svg class="nav-item-icon" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 10.5l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Similar Cases
+  </a>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-settings">
+    <div class="sidebar-section-label">Settings</div>
+    <div class="setting-row">
+      <div class="setting-label">HF API Key</div>
+      <input type="password" class="setting-input" value="hf_xxxxxxxxxxxxxx">
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">Readability</div>
+      <select class="setting-input"><option>Basic</option><option selected>Student</option><option>Advanced</option></select>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">Language</div>
+      <select class="setting-input"><option selected>English</option><option>Hindi</option><option>Telugu</option></select>
+    </div>
+    <div class="setting-row">
+      <label class="setting-checkbox"><input type="checkbox" checked><span>InLegalBERT Roles</span></label>
+    </div>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-search">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#9E9B96" stroke-width="1.4"/><path d="M10.5 10.5l3 3" stroke="#9E9B96" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <input type="text" placeholder="Search articles, videos, documents…">
+  </div>
+  <div class="topbar-right">
+    <button class="topbar-icon-btn">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2a4.5 4.5 0 014.5 4.5c0 2.5.5 3.5 1.5 4.5H2c1-1 1.5-2 1.5-4.5A4.5 4.5 0 018 2zM6.5 13a1.5 1.5 0 003 0" stroke="#6B6860" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </button>
+    <div class="avatar">JD</div>
+  </div>
+</header>
+
+<!-- SEARCH SHELL -->
+<div class="search-shell">
+
+  <!-- LEFT FILTER -->
+  <div class="filter-panel">
+    <div class="filter-panel-title">ILDC Filters</div>
+
+    <div class="filter-group">
+      <div class="filter-group-label">Judgment Outcome</div>
+      <div class="radio-option">
+        <input type="radio" name="outcome" id="o-all" checked>
+        <label for="o-all">All Outcomes</label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" name="outcome" id="o-acc">
+        <label for="o-acc">Accepted</label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" name="outcome" id="o-dis">
+        <label for="o-dis">Dismissed</label>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-label">Search Mode</div>
+      <div class="radio-option">
+        <input type="radio" name="mode" id="m-hybrid" checked>
+        <label for="m-hybrid">Hybrid BM25 + FAISS</label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" name="mode" id="m-sem">
+        <label for="m-sem">Semantic</label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" name="mode" id="m-kw">
+        <label for="m-kw">Keyword</label>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-label">Number of Results</div>
+      <div class="slider-wrap">
+        <div class="slider-value" id="slider-val">5 results</div>
+        <input type="range" min="3" max="20" value="5" step="1" oninput="document.getElementById('slider-val').textContent = this.value + ' results'">
+        <div class="slider-minmax"><span>3</span><span>20</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN PANEL -->
+  <div class="main-panel">
+    <div class="search-bar-wrap">
+      <div class="search-bar">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#9E9B96" stroke-width="1.4"/><path d="M10.5 10.5l3 3" stroke="#9E9B96" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <input class="search-bar-input" id="case-search-input" type="text" placeholder="Describe your case or paste a legal summary to find similar precedents…" onkeydown="handleSearchKey(event)">
+        <button class="search-btn" onclick="runSearch()">Search</button>
+      </div>
+    </div>
+
+    <div class="results-area" id="results-area">
+      <!-- Empty state -->
+      <div id="empty-state" class="empty-state-search">
+        <div class="empty-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#9E9B96" stroke-width="1.5"/><path d="M16.5 16.5l4 4" stroke="#9E9B96" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="empty-title">Search 35,000+ ILDC cases</div>
+        <div class="empty-sub">Find precedents by describing the legal situation, entering facts, or pasting a case summary.</div>
+      </div>
+
+      <!-- Results (hidden initially) -->
+      <div id="results-list" style="display:none;">
+        <div class="results-meta">Found <strong id="result-count">4</strong> similar cases</div>
+
+        <div class="result-card fade-up">
+          <div class="result-card-header">
+            <div class="result-card-title">State of Maharashtra v. Suresh</div>
+            <div class="result-outcome">
+              <div class="outcome-icon accept">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M3 6l2 2 4-4" stroke="#1A6B3C" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <span class="badge badge-green">Accepted</span>
+            </div>
+          </div>
+          <div class="result-meta">
+            <span>Supreme Court</span>
+            <span class="result-meta-dot"></span>
+            <span>2000</span>
+            <span class="result-meta-dot"></span>
+            <span class="score-badge">Score: 0.84</span>
+          </div>
+          <div class="result-preview">The case examines the evidentiary value of dying declarations in criminal proceedings and establishes standards for corroboration. The court considered whether a dying declaration made to a magistrate could be the sole basis for conviction.</div>
+          <div class="result-tags">
+            <span class="result-tag">Section 302 IPC</span>
+            <span class="result-tag">Dying Declaration</span>
+            <span class="result-tag">Corroboration</span>
+          </div>
+          <div class="result-findings">
+            <div class="result-findings-label">Key Finding</div>
+            <div class="result-findings-text">"A dying declaration, if found to be true and voluntary, can be the sole basis for conviction even without corroboration."</div>
+          </div>
+        </div>
+
+        <div class="result-card fade-up fade-up-1">
+          <div class="result-card-header">
+            <div class="result-card-title">Kushal Rao v. State of Bombay</div>
+            <div class="result-outcome">
+              <div class="outcome-icon reject">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M4 4l4 4M8 4l-4 4" stroke="#8B1A1A" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <span class="badge badge-red">Dismissed</span>
+            </div>
+          </div>
+          <div class="result-meta">
+            <span>Supreme Court</span>
+            <span class="result-meta-dot"></span>
+            <span>1958</span>
+            <span class="result-meta-dot"></span>
+            <span class="score-badge">Score: 0.79</span>
+          </div>
+          <div class="result-preview">Seminal judgment laying down principles for appreciation of dying declarations. The court formulated guidelines to determine whether a dying declaration is reliable and can form the basis for conviction.</div>
+          <div class="result-tags">
+            <span class="result-tag">Section 32 Evidence Act</span>
+            <span class="result-tag">Dying Declaration</span>
+          </div>
+          <div class="result-findings">
+            <div class="result-findings-label">Key Finding</div>
+            <div class="result-findings-text">"The dying declaration must be consistent throughout and must not suffer from any infirmity."</div>
+          </div>
+        </div>
+
+        <div class="result-card fade-up fade-up-2">
+          <div class="result-card-header">
+            <div class="result-card-title">P.V. Radhakrishna v. State of Karnataka</div>
+            <div class="result-outcome">
+              <div class="outcome-icon accept">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M3 6l2 2 4-4" stroke="#1A6B3C" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <span class="badge badge-green">Accepted</span>
+            </div>
+          </div>
+          <div class="result-meta">
+            <span>Supreme Court</span>
+            <span class="result-meta-dot"></span>
+            <span>2003</span>
+            <span class="result-meta-dot"></span>
+            <span class="score-badge">Score: 0.71</span>
+          </div>
+          <div class="result-preview">This case further refined the law on dying declarations, specifically addressing cases where multiple dying declarations exist and are inconsistent with each other.</div>
+          <div class="result-tags">
+            <span class="result-tag">Multiple Declarations</span>
+            <span class="result-tag">Inconsistency</span>
+            <span class="result-tag">Section 302 IPC</span>
+          </div>
+          <div class="result-findings">
+            <div class="result-findings-label">Key Finding</div>
+            <div class="result-findings-text">"Where multiple declarations are inconsistent, the court must carefully analyze the circumstances to determine credibility."</div>
+          </div>
+        </div>
+
+        <div class="result-card fade-up fade-up-3">
+          <div class="result-card-header">
+            <div class="result-card-title">Laxman v. State of Maharashtra</div>
+            <div class="result-outcome">
+              <div class="outcome-icon accept">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M3 6l2 2 4-4" stroke="#1A6B3C" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <span class="badge badge-green">Accepted</span>
+            </div>
+          </div>
+          <div class="result-meta">
+            <span>Supreme Court</span>
+            <span class="result-meta-dot"></span>
+            <span>2002</span>
+            <span class="result-meta-dot"></span>
+            <span class="score-badge">Score: 0.68</span>
+          </div>
+          <div class="result-preview">Constitutional Bench decision addressing whether medical certification of fitness is mandatory before recording a dying declaration, and implications of non-compliance.</div>
+          <div class="result-tags">
+            <span class="result-tag">Medical Certificate</span>
+            <span class="result-tag">Section 302 IPC</span>
+            <span class="result-tag">Constitution Bench</span>
+          </div>
+          <div class="result-findings">
+            <div class="result-findings-label">Key Finding</div>
+            <div class="result-findings-text">"Medical certification is not a sine qua non for admission of dying declaration in evidence."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function handleSearchKey(e) { if (e.key === 'Enter') runSearch(); }
+
+function runSearch() {
+  const val = document.getElementById('case-search-input').value.trim();
+  if (!val) return;
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('results-list').style.display = 'block';
+}
+</script>
+</body>
+</html>
