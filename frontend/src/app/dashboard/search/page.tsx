@@ -1,12 +1,10 @@
 "use client";
-import { useState, useContext } from 'react';
-import { SettingsCtx } from '../layout';
+import { useState } from 'react';
 import { searchCases } from '@/lib/api';
 
 type Result = { name?: string; court?: string; date?: string; case_id?: string; label?: number; label_text?: string; _similarity?: number; _rrf_score?: number; preview?: string; sections_cited?: string[]; annotations?: string[]; };
 
 export default function SearchPage() {
-  const { hfKey } = useContext(SettingsCtx);
   const [query, setQuery] = useState('');
   const [outcome, setOutcome] = useState('all');
   const [mode, setMode] = useState('Hybrid (BM25 + FAISS)');
@@ -20,7 +18,7 @@ export default function SearchPage() {
     if (!query.trim()) return;
     setLoading(true); setError(''); setSearched(true);
     try {
-      const res = await searchCases(query, hfKey, topK, outcome, '', mode);
+      const res = await searchCases(query, topK, outcome, '', mode);
       if (!res.success) throw new Error(res.error);
       setResults(res.results || []);
     } catch (e: any) { setError(e.message); setResults([]); }

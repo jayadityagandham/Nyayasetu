@@ -98,7 +98,7 @@ export default function QAPage() {
                     </div>
                   )}
 
-                  {(m.followups?.length ?? 0) > 0 && (
+                  {m.followups && m.followups.length > 0 && (
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
                       <span style={{ fontSize: '0.8rem', color: 'var(--text-4)', alignSelf: 'center', marginRight: '0.5rem' }}>Follow-ups:</span>
                       {m.followups.map((fq, fi) => (

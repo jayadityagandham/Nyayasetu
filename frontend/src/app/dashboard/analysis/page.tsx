@@ -235,7 +235,7 @@ export default function AnalysisPage() {
 
             <div className="filter-group" style={{ flex: 1 }}>
               <p className="filter-label">Timeline of Events</p>
-              {data.timeline?.length > 0 ? (
+              {data.timeline && data.timeline.length > 0 ? (
                 <div>
                   {data.timeline.map((e: any, i: number) => (
                     <div key={i} className="t-item">
