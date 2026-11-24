@@ -1,12 +1,16 @@
 __pycache__/
 *.pyc
 *.pyo
-data/
+# Ignore large FAISS/BM25 index binaries, but NOT mock_statutes.json
+data/indices/
 *.faiss
 *.pkl
 *.npy
 .env
+.env.local
+frontend/.env.local
 node_modules/
 .next/
 package-lock.json
 web_structure.md.resolved
+

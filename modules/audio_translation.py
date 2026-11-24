@@ -17,7 +17,6 @@ Feature 14: Text-to-Speech via gTTS (English/Hindi/Telugu)
 
 import os
 import tempfile
-import streamlit as st
 from typing import Optional
 from gtts import gTTS
 from modules.hf_client import hf_translate, hf_whisper_transcribe
@@ -150,9 +149,8 @@ function startListening() {
 
 
 def render_voice_input() -> None:
-    """Render the browser-based voice input widget. Client-side Web Speech API."""
-    import streamlit.components.v1 as components
-    components.html(STT_JS, height=140)
+    """Voice input widget — requires Streamlit (not available in FastAPI mode)."""
+    pass
 
 
 def whisper_upload_transcribe(api_key: str, audio_file, language: str = "en") -> str:

@@ -12,7 +12,6 @@ Lightweight regex-based operations run locally (no GPU needed).
 
 import re
 import pdfplumber
-import streamlit as st
 from typing import List, Dict, Tuple, Any, Optional, Union
 from modules.hf_client import hf_inlegalbert_classify, hf_ner, hf_whisper_transcribe
 

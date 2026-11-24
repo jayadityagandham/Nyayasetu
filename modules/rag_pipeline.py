@@ -15,7 +15,7 @@ import json
 import os
 import re
 import numpy as np
-import streamlit as st
+from functools import lru_cache
 from typing import Union, Optional, List, Dict, Any, Tuple
 from rank_bm25 import BM25Okapi
 
@@ -32,13 +32,19 @@ from modules.hf_client import hf_embeddings, hf_generate
 # Knowledge Base & Index Loading
 # ─────────────────────────────────────────────────────────────────────────────
 
-@st.cache_data
+_KB_CACHE = None
+
 def load_knowledge_base() -> List[Dict]:
+    global _KB_CACHE
+    if _KB_CACHE is not None:
+        return _KB_CACHE
     fp = os.path.join("data", "mock_statutes.json")
     if os.path.exists(fp):
         with open(fp, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return []
+            _KB_CACHE = json.load(f)
+            return _KB_CACHE
+    _KB_CACHE = []
+    return _KB_CACHE
 
 
 def _build_search_texts(kb: List[Dict]) -> List[str]:
@@ -50,7 +56,8 @@ def _build_search_texts(kb: List[Dict]) -> List[str]:
     ]
 
 
-@st.cache_resource
+_INDICES_CACHE = None
+
 def initialize_indices(_kb_tuple, api_key: str = ""):
     """
     Build FAISS dense index (via HF embeddings API) + BM25 sparse index.
@@ -95,25 +102,35 @@ def ildc_index_exists() -> bool:
     return os.path.exists(ILDC_META_FILE) and os.path.exists(ILDC_BM25_FILE)
 
 
-@st.cache_data(show_spinner=False)
+_ILDC_META_CACHE = None
+
 def load_ildc_metadata() -> List[Dict]:
     """
     Load 35k ILDC case metadata from disk.
     Each entry: case_id, name, court, date, label, label_text,
                 sections_cited, annotations, preview, context
     """
+    global _ILDC_META_CACHE
+    if _ILDC_META_CACHE is not None:
+        return _ILDC_META_CACHE
     if not os.path.exists(ILDC_META_FILE):
-        return []
+        _ILDC_META_CACHE = []
+        return _ILDC_META_CACHE
     with open(ILDC_META_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+        _ILDC_META_CACHE = json.load(f)
+    return _ILDC_META_CACHE
 
 
-@st.cache_resource(show_spinner=False)
+_ILDC_INDICES_CACHE = None
+
 def load_ildc_indices():
     """
     Load pre-built BM25 + FAISS from disk (built once by build_ildc_index.py).
     Returns (faiss_index | None, bm25 | None, search_texts list)
     """
+    global _ILDC_INDICES_CACHE
+    if _ILDC_INDICES_CACHE is not None:
+        return _ILDC_INDICES_CACHE
     import pickle
     bm25, faiss_index, texts = None, None, []
     if os.path.exists(ILDC_BM25_FILE):
@@ -124,7 +141,8 @@ def load_ildc_indices():
             texts = pickle.load(f)
     if FAISS_AVAILABLE and os.path.exists(ILDC_FAISS_FILE):
         faiss_index = faiss.read_index(ILDC_FAISS_FILE)
-    return faiss_index, bm25, texts
+    _ILDC_INDICES_CACHE = (faiss_index, bm25, texts)
+    return _ILDC_INDICES_CACHE
 
 
 def get_ildc_stats() -> dict:

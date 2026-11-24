@@ -1,0 +1,200 @@
+[
+  {
+    "section": "Section 302 IPC",
+    "bns_equivalent": "Section 103 BNS",
+    "title": "Punishment for Murder",
+    "short_title": "Murder",
+    "description": "Whoever commits murder shall be punished with death, or imprisonment for life, and shall also be liable to fine.",
+    "ingredients": ["Intentional killing of a human being", "Death caused by the act of the accused", "Act done with intention to cause death or grievous hurt likely to cause death", "Knowledge that the act is likely to cause death"],
+    "real_example": "A person who deliberately poisons another with the intent to kill is guilty of murder under this section.",
+    "layperson_explanation": "If someone intentionally kills another person, they can be sent to prison for life or even given the death penalty. It is the most serious crime in the Indian Penal Code.",
+    "penalty": "Death or Life Imprisonment + Fine"
+  },
+  {
+    "section": "Section 376 IPC",
+    "bns_equivalent": "Section 64 BNS",
+    "title": "Punishment for Rape",
+    "short_title": "Rape",
+    "description": "Whoever commits rape shall be punished with rigorous imprisonment for a term not less than ten years, which may extend to imprisonment for life, and shall also be liable to fine.",
+    "ingredients": ["Sexual intercourse without consent", "Against the will of the victim", "Using force, threats, or deception"],
+    "real_example": "A man who forces a woman into sexual intercourse against her will is guilty under this section.",
+    "layperson_explanation": "Rape is a serious crime where someone forces another person into a sexual act without their consent. The law punishes it with at least 10 years in prison.",
+    "penalty": "Minimum 10 years Rigorous Imprisonment, up to Life + Fine"
+  },
+  {
+    "section": "Section 420 IPC",
+    "bns_equivalent": "Section 318 BNS",
+    "title": "Cheating and Dishonestly Inducing Delivery of Property",
+    "short_title": "Cheating",
+    "description": "Whoever cheats and thereby dishonestly induces the person deceived to deliver any property to any person, or to make, alter or destroy a valuable security, shall be punished with imprisonment up to seven years and fine.",
+    "ingredients": ["Cheating (deceptive act)", "Dishonest inducement", "Delivery of property or valuable security"],
+    "real_example": "A person who sells fake gold jewellery by pretending it is genuine, inducing the buyer to pay money, is guilty under this section.",
+    "layperson_explanation": "If someone tricks you into giving them money or property by lying to you, they are guilty of cheating. This includes online fraud, fake investment schemes, and fraudulent sales.",
+    "penalty": "Up to 7 years Imprisonment + Fine"
+  },
+  {
+    "section": "Section 378 IPC",
+    "bns_equivalent": "Section 303 BNS",
+    "title": "Theft",
+    "short_title": "Theft",
+    "description": "Whoever, intending to take dishonestly any moveable property out of the possession of any person without that person's consent, moves that property in order to such taking, is said to commit theft.",
+    "ingredients": ["Dishonest intention", "Moveable property", "Taken from possession of another", "Without consent", "Movement of property"],
+    "real_example": "Picking a phone from someone's bag in a bus without their knowledge is theft under this section.",
+    "layperson_explanation": "Theft means taking someone else's belongings without their permission. Even picking up something small without consent can count as theft under the law.",
+    "penalty": "Up to 3 years Imprisonment + Fine, or both"
+  },
+  {
+    "section": "Section 120B IPC",
+    "bns_equivalent": "Section 61(2) BNS",
+    "title": "Criminal Conspiracy",
+    "short_title": "Criminal Conspiracy",
+    "description": "Whoever is a party to a criminal conspiracy to commit an offence punishable with death or life imprisonment or rigorous imprisonment for two years or more shall be punished in the same manner as if he had abetted such offence.",
+    "ingredients": ["Agreement between two or more persons", "To commit an illegal act or a legal act by illegal means", "Meeting of minds of the conspirators"],
+    "real_example": "Two people who plan together to murder someone and execute that plan are both guilty of criminal conspiracy in addition to murder.",
+    "layperson_explanation": "When two or more people plan together to commit a serious crime, all of them can be punished even if only one of them actually carried out the crime. Planning a crime is itself a crime.",
+    "penalty": "Same as punishment for the abetted offence (varies)"
+  },
+  {
+    "section": "Section 300 IPC",
+    "bns_equivalent": "Section 100 BNS",
+    "title": "Murder (Definition)",
+    "short_title": "Murder Definition",
+    "description": "Culpable homicide is murder if the act by which the death is caused is done with the intention of causing death, or with the intention of causing such bodily injury as the offender knows to be likely to cause the death of the person, or is sufficient in the ordinary course of nature to cause death.",
+    "ingredients": ["Act done with intention to cause death", "Intention to cause bodily injury sufficient to cause death", "Knowledge that act is imminently dangerous"],
+    "real_example": "A person who shoots another in the chest intending to kill commits murder. Even if they intended only grievous hurt but knew it would likely kill, it is still murder.",
+    "layperson_explanation": "Murder means deliberately killing someone, or doing something so dangerous that you know it will very likely kill a person. The law distinguishes this from accidental deaths.",
+    "penalty": "Death or Life Imprisonment (under Section 302 IPC)"
+  },
+  {
+    "section": "Section 304 IPC",
+    "bns_equivalent": "Section 105 BNS",
+    "title": "Culpable Homicide Not Amounting to Murder",
+    "short_title": "Culpable Homicide",
+    "description": "Whoever commits culpable homicide not amounting to murder shall be punished with imprisonment for life or imprisonment for up to 10 years and fine.",
+    "ingredients": ["Causing death", "Without premeditation or full intention to kill", "With knowledge that act is likely to cause death"],
+    "real_example": "A person who, in a sudden fight without premeditation, strikes another who dies as a result may be charged under this section rather than Section 302.",
+    "layperson_explanation": "Sometimes a killing happens in the heat of the moment without full planning. The law treats such cases less severely than deliberate murder, but still as a serious crime.",
+    "penalty": "Life Imprisonment or up to 10 years + Fine"
+  },
+  {
+    "section": "Section 34 IPC",
+    "bns_equivalent": "Section 3(5) BNS",
+    "title": "Acts Done by Several Persons in Furtherance of Common Intention",
+    "short_title": "Common Intention",
+    "description": "When a criminal act is done by several persons, in furtherance of the common intention of all, each of such persons is liable for that act in the same manner as if it were done by him alone.",
+    "ingredients": ["Criminal act done by several persons", "In furtherance of common intention", "Pre-arranged plan (even if formed at the spot)"],
+    "real_example": "If three people attack someone together intending to kill, all three are equally liable for murder even if only one dealt the fatal blow.",
+    "layperson_explanation": "If a group of people together plan and carry out a crime, every person in that group is equally guilty under the law — even if they personally did not physically commit the act.",
+    "penalty": "Same as the principal offender"
+  },
+  {
+    "section": "Section 307 IPC",
+    "bns_equivalent": "Section 109 BNS",
+    "title": "Attempt to Murder",
+    "short_title": "Attempt to Murder",
+    "description": "Whoever does any act with such intention or knowledge, and under such circumstances that, if he by that act caused death, he would be guilty of murder, shall be punished with imprisonment of either description for a term which may extend to ten years.",
+    "ingredients": ["Act done with intention or knowledge to commit murder", "Act is sufficient to cause death", "Death did not actually occur"],
+    "real_example": "Firing a gun at a person with intent to kill, but missing, constitutes attempt to murder.",
+    "layperson_explanation": "If someone tries to kill another person but fails, they are still guilty of a serious crime. You can be punished for attempting murder even if the victim survives.",
+    "penalty": "Up to 10 years Imprisonment (Life Imprisonment if victim hurt)"
+  },
+  {
+    "section": "Section 498A IPC",
+    "bns_equivalent": "Section 85 BNS",
+    "title": "Husband or Relative of Husband of a Woman Subjecting Her to Cruelty",
+    "short_title": "Domestic Cruelty",
+    "description": "Whoever, being the husband or the relative of the husband of a woman, subjects such woman to cruelty shall be punished with imprisonment for a term which may extend to three years and shall also be liable to fine.",
+    "ingredients": ["Acts of cruelty by husband or relatives", "Willful conduct likely to cause grave injury or danger to life", "Harassment for unlawful demands for dowry"],
+    "real_example": "A husband who beats his wife or a mother-in-law who harasses a daughter-in-law for dowry can be charged under this section.",
+    "layperson_explanation": "This law protects married women from abuse by their husbands or in-laws. If a woman is physically, emotionally, or financially harassed at home, those responsible can be arrested and jailed.",
+    "penalty": "Up to 3 years Imprisonment + Fine"
+  },
+  {
+    "section": "Article 136 Constitution",
+    "bns_equivalent": "N/A (Constitutional provision)",
+    "title": "Special Leave to Appeal to Supreme Court",
+    "short_title": "Special Leave Petition (SLP)",
+    "description": "Notwithstanding anything in this Chapter, the Supreme Court may, in its discretion, grant special leave to appeal from any judgment, decree, determination, sentence or order in any cause or matter passed or made by any court or tribunal in the territory of India.",
+    "ingredients": ["Any judgment or order by any court or tribunal", "Discretion of the Supreme Court", "No automatic right — Supreme Court may or may not admit", "Can be filed within 90 days of High Court judgment"],
+    "real_example": "When the High Court acquits an accused, the State can file an SLP before the Supreme Court within 90 days to challenge the acquittal. The Supreme Court may admit it and restore the conviction.",
+    "layperson_explanation": "An SLP is like a final appeal to India's highest court — the Supreme Court. If you lost a case in the High Court and feel it was wrong, you can ask the Supreme Court to reconsider it. But the Supreme Court has full freedom to accept or reject your request.",
+    "penalty": "N/A (Procedural provision)"
+  },
+  {
+    "section": "Section 374 CrPC",
+    "bns_equivalent": "Section 415 BNSS",
+    "title": "Appeals from Convictions",
+    "short_title": "Criminal Appeals",
+    "description": "Any person convicted on a trial held by a Sessions Judge or an Additional Sessions Judge or on a trial held by any other court in which a sentence of imprisonment for more than seven years has been passed may appeal to the High Court.",
+    "ingredients": ["Conviction by Sessions Court", "Sentence of more than 7 years", "Appeal filed before High Court", "Appeal must be filed within limitation period"],
+    "real_example": "A person convicted for murder by the Sessions Court and sentenced to life imprisonment can appeal to the High Court. The High Court may confirm, reduce, enhance or set aside the conviction.",
+    "layperson_explanation": "If someone is convicted by a lower court (Sessions Court), they have the right to challenge that verdict in the High Court. The High Court can increase, reduce or cancel the punishment. If they lose there too, they can go to the Supreme Court.",
+    "penalty": "N/A (Procedural provision)"
+  },
+  {
+    "section": "Section 386 CrPC",
+    "bns_equivalent": "Section 427 BNSS",
+    "title": "Powers of Appellate Court",
+    "short_title": "Appellate Court Powers",
+    "description": "The Appellate Court may reverse or alter a finding, sentence or order passed by the trial court. It may reduce, enhance or change the nature of the sentence. It may order a new trial or acquit or convict the accused. Different courts at different levels can therefore reach different conclusions from the same evidence.",
+    "ingredients": ["Power to reverse finding", "Power to alter or enhance sentence", "Power to order retrial", "Power to acquit or convict"],
+    "real_example": "The Sessions Court may award 10 years; the High Court may reduce it to 7 years on appeal. The Supreme Court may then restore the original 10 years if it finds the High Court erred. Each court applies independent judicial discretion to the same facts.",
+    "layperson_explanation": "Different courts can give different sentences for the same case because each higher court independently re-examines the evidence and the law. A High Court or Supreme Court can increase, reduce, or cancel whatever the lower court decided. This is the appellate system — it is designed to correct errors.",
+    "penalty": "N/A (Procedural provision)"
+  },
+  {
+    "section": "Section 401 CrPC",
+    "bns_equivalent": "Section 442 BNSS",
+    "title": "High Court's Power of Revision and Enhancement of Sentence",
+    "short_title": "Revision and Sentence Enhancement",
+    "description": "The High Court may, on its own motion, call for and examine the record of any proceeding before any inferior criminal court and may enhance the sentence passed by that court. This power ensures supervisory control of High Courts over lower courts.",
+    "ingredients": ["Record of inferior court proceedings", "High Court suo motu or on application", "Power to enhance, reduce or set aside sentence", "Does not amount to a fresh trial"],
+    "real_example": "If the Sessions Court gives only 3 years for a serious offence, the High Court can revise it upward to 10 years without a fresh appeal being filed by the State.",
+    "layperson_explanation": "The High Court acts as a supervisor over all lower courts. It can increase a punishment on its own if it feels the lower court was too lenient — this is called revision. So even if a person is sentenced once, a higher court can change it.",
+    "penalty": "N/A (Procedural provision)"
+  },
+  {
+    "section": "Section 437 CrPC",
+    "bns_equivalent": "Section 480 BNSS",
+    "title": "When Bail May Be Taken in Case of Non-Bailable Offence",
+    "short_title": "Bail in Non-Bailable Offences",
+    "description": "When any person accused of, or suspected of, the commission of any non-bailable offence is arrested or detained without warrant, he may be released on bail subject to conditions imposed by the court. Bail may be refused if there is reason to believe accused may abscond, influence witnesses or commit further offences.",
+    "ingredients": ["Non-bailable offence alleged", "Person arrested or detained", "Court discretion to grant or refuse bail", "Conditions may be imposed"],
+    "real_example": "A person arrested for murder (non-bailable) can apply for bail. The Sessions Judge will hear arguments and decide whether the risk of absconding or tampering with evidence is too high. Bail is usually denied in serious offences.",
+    "layperson_explanation": "Bail means temporary release from jail while the case is going on. For serious crimes like murder, you cannot get bail automatically — you need to apply to the court and convince the judge that you will not run away or tamper with evidence.",
+    "penalty": "N/A (Procedural provision)"
+  },
+  {
+    "section": "Section 96 IPC",
+    "bns_equivalent": "Section 34 BNS",
+    "title": "Right of Private Defence — Things Done in Private Defence",
+    "short_title": "Right of Private Defence",
+    "description": "Nothing is an offence which is done in the exercise of the right of private defence. Every person has the right to defend their own body and property, and that of any other person, against any act which is an offence or which is so imminently threatening that they need to act immediately.",
+    "ingredients": ["Reasonable apprehension of danger to body or property", "No time to approach public authorities", "Force used must be proportionate to the threat", "Right cannot be exercised in retaliation after danger has passed"],
+    "real_example": "If an attacker tries to stab you, you can use reasonable force — even fatal force if necessary — to protect yourself. But once the attacker retreats and the danger has passed, you cannot chase and attack them back.",
+    "layperson_explanation": "Under Indian law, you have the right to protect yourself and others from harm. If someone attacks you, you can fight back — but only as much force as is necessary to stop the danger. This is called the right of private defence.",
+    "penalty": "N/A — a defence/exception to criminal liability"
+  },
+  {
+    "section": "Section 27 Indian Evidence Act",
+    "bns_equivalent": "Section 23 BSA 2023",
+    "title": "How Much of Information Received from Accused May Be Proved",
+    "short_title": "Section 27 Discovery",
+    "description": "When any fact is deposed to as discovered in consequence of information received from a person accused of any offence, in the custody of a police officer, so much of such information, whether it amounts to a confession or not, as relates distinctly to the fact thereby discovered, may be proved.",
+    "ingredients": ["Person must be in police custody", "Information must lead to discovery of a new fact", "Only the portion of statement leading to discovery is admissible", "Cannot be used to prove a confession"],
+    "real_example": "An accused tells police where he hid the murder weapon. The police then find the weapon at that location. The discovery of the weapon is admissible as evidence even though it came from the accused's statement — but only the part that led to the discovery.",
+    "layperson_explanation": "If an accused person in police custody tells the police where to find evidence (like a weapon), and the police actually find it there, that discovery can be used in court as evidence. This is called a Section 27 recovery — it is commonly used in murder cases.",
+    "penalty": "N/A (Evidence law provision)"
+  },
+  {
+    "section": "Section 154 CrPC",
+    "bns_equivalent": "Section 173 BNSS",
+    "title": "First Information Report (FIR)",
+    "short_title": "FIR — First Information Report",
+    "description": "Every information relating to the commission of a cognizable offence, if given orally to an officer in charge of a police station, shall be reduced to writing by him. The FIR is the document that sets the criminal law in motion and must be registered without delay.",
+    "ingredients": ["Information about a cognizable offence", "Given to officer in charge of police station", "Must be reduced to writing and read to informant", "Signed by informant", "Copy must be given to informant free of cost"],
+    "real_example": "When someone's house is burgled and they go to the police station to report it, the police write down everything they say and register it as an FIR. The FIR officially starts the investigation.",
+    "layperson_explanation": "An FIR is the very first complaint registered at a police station about a crime. It is the document that officially starts a police investigation. Police are legally required to register an FIR immediately when a serious crime (cognizable offence) is reported — they cannot refuse.",
+    "penalty": "N/A (Procedural provision)"
+  }
+]
